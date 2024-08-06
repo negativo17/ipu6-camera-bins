@@ -1,5 +1,5 @@
-%global commit 987b09ad7e6124ab8623a986f92ecb47061b8fa0
-%global date 20240507
+%global commit 532cb2b946b9fcb3038389a7cf126fe56f4203af
+%global date 20240719
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global debug_package %{nil}
@@ -7,7 +7,7 @@
 Name:           ipu6-camera-bins
 Summary:        Proprietary image processing libraries for MIPI cameras through the Intel IPU6
 Version:        0
-Release:        2.%{date}git%{shortcommit}%{?dist}
+Release:        3.%{date}git%{shortcommit}%{?dist}
 License:        Proprietary
 URL:            https://github.com/intel/ipu6-camera-bins
 ExclusiveArch:  x86_64
@@ -74,6 +74,9 @@ done
 %{_libdir}/ipu_mtl/*.a
 
 %changelog
+* Tue Aug 06 2024 Simone Caronni <negativo17@gmail.com> - 0-3.20240719git532cb2b
+- Update to latest snapshot.
+
 * Mon May 13 2024 Simone Caronni <negativo17@gmail.com> - 0-2.20240507git987b09a
 - Update to latest snapshot.
 
