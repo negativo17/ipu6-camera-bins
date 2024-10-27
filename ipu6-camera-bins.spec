@@ -1,5 +1,5 @@
-%global commit 532cb2b946b9fcb3038389a7cf126fe56f4203af
-%global date 20240719
+%global commit 98ca6f2a54d20f171628055938619972514f7a07
+%global date 20240929
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global debug_package %{nil}
@@ -7,7 +7,7 @@
 Name:           ipu6-camera-bins
 Summary:        Proprietary image processing libraries for MIPI cameras through the Intel IPU6
 Version:        0
-Release:        3.%{date}git%{shortcommit}%{?dist}
+Release:        4.%{date}git%{shortcommit}%{?dist}
 License:        Proprietary
 URL:            https://github.com/intel/ipu6-camera-bins
 ExclusiveArch:  x86_64
@@ -31,49 +31,34 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 This provides the necessary header files for IPU6 development.
 
 %prep
-%setup -q -n %{name}-%{commit}
-for target in ipu_tgl ipu_adl ipu_mtl; do
-  chrpath --delete lib/$target/*.so
-  sed -i \
-    -e "s|libdir=\${prefix}/lib|libdir=\${prefix}/%{_lib}|g" \
-    lib/$target/pkgconfig/*.pc
-done
+%autosetup -n %{name}-%{commit}
+chrpath --delete lib/*.so.*
+sed -i \
+    -e "s|libdir=\${exec_prefix}/lib|libdir=\${prefix}/%{_lib}|g" \
+    lib/pkgconfig/*.pc
 
 %install
-mkdir -p %{buildroot}%{_includedir}
-for target in ipu_tgl ipu_adl ipu_mtl; do
-  mkdir -p %{buildroot}%{_libdir}/$target
-  cp -pr include/$target %{buildroot}%{_includedir}
-  cp -pr lib/$target/lib* lib/$target/pkgconfig %{buildroot}%{_libdir}/$target
-  chmod 755 %{buildroot}%{_libdir}/$target/*.so*
-done
+mkdir -p %{buildroot}%{_includedir}/
+mkdir -p %{buildroot}%{_libdir}/
+cp -pr include/* %{buildroot}%{_includedir}/
+cp -pr lib/lib* lib/pkgconfig %{buildroot}%{_libdir}/
+chmod 755 %{buildroot}%{_libdir}/$target/*.so*
 
 %files
-%dir %{_libdir}/ipu_tgl
-%dir %{_libdir}/ipu_adl
-%dir %{_libdir}/ipu_mtl
-%{_libdir}/ipu_tgl/*.so*
-%{_libdir}/ipu_adl/*.so*
-%{_libdir}/ipu_mtl/*.so*
+%license LICENSE
+%doc README.md SECURITY.md
+%{_libdir}/*.so*
 
 %files devel
-%dir %{_includedir}/ipu_tgl
-%dir %{_includedir}/ipu_adl
-%dir %{_includedir}/ipu_mtl
-%dir %{_libdir}/ipu_tgl/pkgconfig
-%dir %{_libdir}/ipu_adl/pkgconfig
-%dir %{_libdir}/ipu_mtl/pkgconfig
-%{_includedir}/ipu_tgl/*
-%{_includedir}/ipu_adl/*
-%{_includedir}/ipu_mtl/*
-%{_libdir}/ipu_tgl/pkgconfig/*
-%{_libdir}/ipu_adl/pkgconfig/*
-%{_libdir}/ipu_mtl/pkgconfig/*
-%{_libdir}/ipu_tgl/*.a
-%{_libdir}/ipu_adl/*.a
-%{_libdir}/ipu_mtl/*.a
+%{_includedir}/*
+%{_libdir}/pkgconfig/*
+%{_libdir}/*.a
+%{_libdir}/*.so
 
 %changelog
+* Sun Oct 27 2024 Simone Caronni <negativo17@gmail.com> - 0-4.20240929git98ca6f2
+- Update to latest snapshot. Unified build.
+
 * Tue Aug 06 2024 Simone Caronni <negativo17@gmail.com> - 0-3.20240719git532cb2b
 - Update to latest snapshot.
 
