@@ -44,6 +44,11 @@ cp -pr include/* %{buildroot}%{_includedir}/
 cp -pr lib/lib* lib/pkgconfig %{buildroot}%{_libdir}/
 chmod 755 %{buildroot}%{_libdir}/$target/*.so*
 
+for lib in %{buildroot}%{_libdir}/lib*.so.*; do \
+  lib=${lib##*/}; \
+  ln -s $lib %{buildroot}%{_libdir}/${lib%.*}; \
+done
+
 %files
 %license LICENSE
 %doc README.md SECURITY.md
@@ -53,6 +58,7 @@ chmod 755 %{buildroot}%{_libdir}/$target/*.so*
 %{_includedir}/*
 %{_libdir}/pkgconfig/*
 %{_libdir}/*.a
+%{_libdir}/*.so
 
 %changelog
 * Fri Jun 27 2025 Simone Caronni <negativo17@gmail.com> - 0-5.20250627git30e8766
